@@ -48,7 +48,7 @@ const SelectedMovieDetails = ({selectedId, handleCloseSelectedMovie, handleAddWa
         const fetchDetails = async() => {
 
             try{
-            const res = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`);
+            const res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`);
 
             if(!res.ok) throw new Error('Something went wrong with fetching details :(');
 
