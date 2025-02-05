@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, useRef} from "react";
+import { useKey } from "../hooks/useKey";
 import StarRating from "./StarRating";
 import SpinnerLoader from "./Loader";
 import CustomButton from "./CustomButton";
@@ -11,9 +11,17 @@ const SelectedMovieDetails = ({selectedId, handleCloseSelectedMovie, handleAddWa
     const [isLoading, setIsLoading] = useState(false);
     const [userRating, setUserRating] = useState(0);
 
+    //useRef
+    const countRef = useRef(0);
+
+    useEffect(()=> {
+        if(userRating) countRef.current +=  1;
+    }, [userRating]);
+
     const isWatched = watched.map(movie => movie.imdbID).includes(selectedId);
     const watchedUserRating = watched.find( movie => movie.imdbID === selectedId)?.userRating;
     
+
     const {
         Title: title,
          Year: year,
@@ -29,6 +37,7 @@ const SelectedMovieDetails = ({selectedId, handleCloseSelectedMovie, handleAddWa
 
 
 
+
     const handleAdd = () => {
         const newWatchedMovie = {
             imdbID: selectedId,
@@ -38,6 +47,7 @@ const SelectedMovieDetails = ({selectedId, handleCloseSelectedMovie, handleAddWa
             userRating,
             imdbRating: Number(imdbRating),
             runtime: Number(runtime.split(' ').at(0)),
+            countRatingDecisions: countRef.current,
         }
         handleAddWatchedMovie(newWatchedMovie);
         handleCloseSelectedMovie();
@@ -87,19 +97,21 @@ const SelectedMovieDetails = ({selectedId, handleCloseSelectedMovie, handleAddWa
 
       //effect: listening to a keypress
 
-  useEffect(()=>{
-    const callback = (e) => {
-        if(e.code === 'Escape'){
-            handleCloseSelectedMovie();
+    
+useKey('Escape', handleCloseSelectedMovie)
+//   useEffect(()=>{
+//     const callback = (e) => {
+//         if(e.code === 'Escape'){
+//             handleCloseSelectedMovie();
           
-          }
-    }
-    document.addEventListener('keydown',callback);
-      //clean-up funcion
-      return () => {
-        document.removeEventListener('keydown',callback)
-      }
-  },[handleCloseSelectedMovie]);
+//           }
+//     }
+//     document.addEventListener('keydown',callback);
+//       //clean-up funcion
+//       return () => {
+//         document.removeEventListener('keydown',callback)
+//       }
+//   },[handleCloseSelectedMovie]);
 
 
     return(
